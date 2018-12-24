@@ -25,4 +25,9 @@ class CouponsController extends Controller
     	}
     	return view('admin.coupons.add_coupon');
     }
+
+    public function viewCoupons() {
+        $coupons = Coupon::get();
+        return view('admin.coupons.view_coupons', compact('coupons'));
+    }
 }

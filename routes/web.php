@@ -68,6 +68,8 @@
 			// Coupon
 				// Add Coupon
 				Route::match(['get', 'post'], 'admin/add-coupon', 'CouponsController@addCoupon');
+				// Show All Coupons
+				Route::get('admin/view-coupons', 'CouponsController@viewCoupons')->name('admin.show-coupons');
 
 			// Product AJAX
 			// Load Sub-Categories For Main Category

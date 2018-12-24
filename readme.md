@@ -1,3 +1,3 @@
-# Ecommerce-application
+# Ecommerce Application
 Laravel E-Commerce Application
 

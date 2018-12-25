@@ -1,5 +1,5 @@
 <?php
-// Last Video Number is 58 [ Add Delete Functionallity to cart page ]
+// Last Video Number is 61 [ Add Delete Functionallity to cart page ]
 
 
 /*
@@ -70,6 +70,10 @@
 				Route::match(['get', 'post'], 'admin/add-coupon', 'CouponsController@addCoupon');
 				// Show All Coupons
 				Route::get('admin/view-coupons', 'CouponsController@viewCoupons')->name('admin.show-coupons');
+				// Edit Coupon
+				Route::match(['get', 'post'], 'admin/edit-coupon/{id?}', 'CouponsController@editCoupon');
+				// Delete Coupon
+				Route::match(['get', 'post'], 'admin/delete-coupon/{id?}', 'CouponsController@deleteCoupon');
 
 			// Product AJAX
 			// Load Sub-Categories For Main Category

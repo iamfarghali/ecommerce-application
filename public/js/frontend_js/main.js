@@ -35,7 +35,7 @@ $(document).ready(function(){
 		if (idSize == "") { return false; }
 		$.ajax({
 			type:'get',
-			url:'http://localhost/adminPanel/public/get-product-price',
+			url:'http://localhost/ecommerce-application/public/get-product-price',
 			data:{idSize:idSize},
 			success: function(res) {
 				if (res.stock == 0) {

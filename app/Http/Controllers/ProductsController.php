@@ -5,6 +5,7 @@ use App\Category;
 use App\Products;
 use App\ProductsImage;
 use App\ProductsAttribute;
+use App\Coupon;
 use Image;
 use DB;
 
@@ -374,7 +375,16 @@ class ProductsController extends Controller {
 			return redirect('/cart')->withSuccessMessage('Quantity Is Updated');
 		}
 
+		public function applyCoupon() {
+			$coupon_code = request()->coupon_code;
+			$couponCount = Coupon::where('coupon_code', $coupon_code)->count();
 
+			if ( $couponCount == 0 ) {
+				return redirect()->back()->withErrorMessage('Your Coupon Incorrect.');
+			} else {
+				// stuff
+			}
+		}
 
 		// For Ajax request [ Get Product Price ]
 		public function getProductPrice() {

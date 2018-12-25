@@ -1,5 +1,5 @@
 <?php
-// Last Video Number is 61 [ Add Delete Functionallity to cart page ]
+// Last Video Number is 63
 
 
 /*
@@ -30,7 +30,8 @@
 	Route::get('/cart/delete-product/{id}', 'ProductsController@deleteCartProduct');
 	// Update cart quantity
 	Route::get('/cart/update-quantity/{id}/{quantity}', 'ProductsController@updateCartQuantity');
-
+	// Apply Coupon
+	Route::post('/cart/apply-coupon', 'ProductsController@applyCoupon');
 
 
 

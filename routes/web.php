@@ -73,7 +73,7 @@
 				// Edit Coupon
 				Route::match(['get', 'post'], 'admin/edit-coupon/{id?}', 'CouponsController@editCoupon');
 				// Delete Coupon
-				Route::match(['get', 'post'], 'admin/delete-coupon/{id?}', 'CouponsController@deleteCoupon');
+				Route::get('admin/delete-coupon/{id}', 'CouponsController@deleteCoupon');
 
 			// Product AJAX
 			// Load Sub-Categories For Main Category

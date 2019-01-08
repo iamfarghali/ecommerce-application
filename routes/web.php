@@ -1,5 +1,5 @@
 <?php
-// Last Video Number is 63
+// Last Video Number is 72
 
 
 /*
@@ -32,6 +32,9 @@
 	Route::get('/cart/update-quantity/{id}/{quantity}', 'ProductsController@updateCartQuantity');
 	// Apply Coupon
 	Route::post('/cart/apply-coupon', 'ProductsController@applyCoupon');
+	// Register, Login and Logout user
+	Route::match(['get', 'post'], '/login-register', 'UserController@loginRegister');
+	Route::match(['get', 'post'], '/check-email', 'UserController@checkEmail');
 
 
 
@@ -75,6 +78,16 @@
 				Route::match(['get', 'post'], 'admin/edit-coupon/{id?}', 'CouponsController@editCoupon');
 				// Delete Coupon
 				Route::get('admin/delete-coupon/{id}', 'CouponsController@deleteCoupon');
+
+			// Bannners
+				// Add Banner
+				Route::match(['get', 'post'], 'admin/add-banner', 'BannersController@addBanner');
+				// Show All Banners
+				Route::get('admin/view-banners', 'BannersController@viewBanners')->name('admin.show-banners');
+
+				Route::match(['get', 'post'], 'admin/edit-banner/{id}', 'BannersController@editBanner')->name('admin.edit-banner');
+				Route::match(['get', 'post'], 'admin/delete-banner/{id}', 'BannersController@deleteBanner')->name('admin.delete-banner');
+				
 
 			// Product AJAX
 			// Load Sub-Categories For Main Category

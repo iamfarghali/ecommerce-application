@@ -95,5 +95,47 @@ $(document).ready(function(){
 	});
 });
 
+$().ready(function() {
+	$('#signupForm').validate({
+		rules:{
+			name:{
+				required:true,
+				minlength:2,
+				accept:"[a-zA-Z]+"
+			},
+			password:{
+				required:true,
+				minlength:6
+			},
+			email:{
+				required:true,
+				email:true,
+				remote:"http://localhost/ecommerce-application/public/check-email"
+			}
+		},
+		messages:{
+			name:{
+				required:"Name is required.",
+				minlength:"Your name must be more than 2 characters.",
+				accept:"Enter characters only."
+			},
+			password:{
+				required:"Password is required.",
+				minlength:"Your password must be more than 6 characters."
+			},
+			email:{
+				required:"Email is required.",
+				remote:"Email is already exist."
+			}
+		}
 
+	});
+
+	$('#password').passtrength({
+		minChars: 6,
+		passwordToggle: true,
+		tooltip: true,
+		eyeImg: "eye.svg"
+	});
+});
 

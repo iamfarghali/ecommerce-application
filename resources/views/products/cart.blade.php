@@ -98,7 +98,13 @@
 				<div class="col-sm-6">
 					<div class="total_area">
 						<ul>
-							<li>Total <span>$ {{$total}}</span></li>
+							@if (! empty(session('couponCode')))
+								<li>Sub Total <span>$ {{$total}}</span></li>
+								<li>Discond <span>$ {{session('couponAmount')}}</span></li>
+								<li>Grand Total <span>$ {{$total - session('couponAmount')}}</span></li>
+							@else
+								<li>Total <span>$ {{$total}}</span></li>
+							@endif
 						</ul>
 							<a class="btn btn-default update" href="">Update</a>
 							<a class="btn btn-default check_out" href="">Check Out</a>

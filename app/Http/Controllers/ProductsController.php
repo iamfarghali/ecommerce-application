@@ -319,8 +319,10 @@ class ProductsController extends Controller {
 		}
 
 		public function addToCart() {
-			$data = request()->except('_token');
+			session()->forget('couponCode');
+			session()->forget('couponAmount');
 
+			$data = request()->except('_token');
 			$data['size'] = strtolower((explode('-', $data['size']))[1]);
 			$productExist = DB::table('cart')->where([
 				'product_code'	=>	$data['sku'],
@@ -352,11 +354,16 @@ class ProductsController extends Controller {
 		}
 
 		public function deleteCartProduct( $id = null ) {
+			session()->forget('couponCode');
+			session()->forget('couponAmount');
+
 			DB::table('cart')->where('id', $id)->delete();
 			return redirect()->back()->withSuccessMessage('Item is deleted Successfully.');
 		}
 
 		public function updateCartQuantity( $id = null, $quantity = null) {
+			session()->forget('couponCode');
+			session()->forget('couponAmount');
 			$cartDetails = DB::table('cart')->where('id', $id)->first();
 			$attributeStock = ProductsAttribute::where('sku', $cartDetails->product_code)->first();
 			$updateQuantity = $cartDetails->quantity + $quantity;
@@ -376,13 +383,47 @@ class ProductsController extends Controller {
 		}
 
 		public function applyCoupon() {
+			session()->forget('couponCode');
+			session()->forget('couponAmount');
+
 			$coupon_code = request()->coupon_code;
 			$couponCount = Coupon::where('coupon_code', $coupon_code)->count();
 
 			if ( $couponCount == 0 ) {
 				return redirect()->back()->withErrorMessage('Your Coupon Incorrect.');
 			} else {
-				// stuff
+				$coupon = Coupon::where('coupon_code', $coupon_code)->first();
+
+				// if its status is inactive
+				if ($coupon->status == 0) {
+					return redirect()->back()->withErrorMessage('This coupon is Inactive.');
+				}
+
+				// if coupon's expiry date is gone
+				$current_date = date('Y-m-d');
+				if ($coupon->expiry_date < $current_date) {
+					return redirect()->back()->withErrorMessage('This coupon is expiry.');
+				}
+
+				// coupon is valid
+				$session_id = session('session_id');
+				$userCart = DB::table('cart')->where('session_id', $session_id)->get();
+				$total_amount = 0;
+				foreach ($userCart as $item) {
+					$total_amount += $item->quantity * $item->price;
+				}
+
+				if ($coupon->amount_type == 'Fixed') {
+					$couponAmount = $coupon->amount;
+				} else {
+					$couponAmount = $total_amount * ($coupon->amount/100);
+				}
+
+				session()->put('couponAmount', $couponAmount);
+				session()->put('couponCode', $coupon_code);
+
+				return redirect()->back()->withSuccessMessage('Coupon Code is applied successfully.');
+
 			}
 		}
 

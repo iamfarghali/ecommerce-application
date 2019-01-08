@@ -160,9 +160,11 @@
     <script src="{{asset('js/frontend_js/jquery.js')}}"></script>
 	<script src="{{asset('js/frontend_js/bootstrap.min.js')}}"></script>
 	<script src="{{asset('js/frontend_js/jquery.scrollUp.min.js')}}"></script>
+	<script src="{{asset('js/frontend_js/jquery.validate.js') }}"></script>
 	<script src="{{asset('js/frontend_js/price-range.js')}}"></script>
     <script src="{{asset('js/frontend_js/jquery.prettyPhoto.js')}}"></script>
     <script src="{{asset('js/frontend_js/easyzoom.js')}}"></script>
+    <script src="{{asset('js/frontend_js/jquery.passtrength.min.js')}}"></script>
     <script src="{{asset('js/frontend_js/main.js')}}"></script>
 </body>
 </html>

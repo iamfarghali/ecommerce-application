@@ -580,9 +580,7 @@ ul.sub-menu {
 	  background: #FE980F;
 }
 
-.item {
-  padding-left: 100px;
-}
+
 
 
 .pricing {
@@ -2521,3 +2519,10 @@ h2.title {
 }
 
 
+/* my editing style */
+.left.control-carousel.hidden-xs {
+  padding-left: 20px;
+}
+.right.control-carousel.hidden-xs {
+  padding-right: 20px;
+}

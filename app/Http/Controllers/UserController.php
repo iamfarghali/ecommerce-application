@@ -4,21 +4,45 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Country;
+use Auth;
+use Hash;
 
 class UserController extends Controller
 {
     public function loginRegister() {
-    	if(request()->isMethod('post')) {
-    		$data = request()->except('_token');
-    		$user = new User;
-    		$user->name = $data['name'];
-    		$user->password = bcrypt($data['name']);
-    		$user->email = $data['email'];
-    		$user->save();
-    		return redirect('/')->withSuccessMessage("Welcome , $user->name");
-    	}
-
     	return view('users.login_register');
+    }
+    
+    public function register() {
+        $data = request()->except('_token');
+        $countUser = User::where('email', $data['email'])->count();
+        if ($countUser > 0) {
+            return redirect()->back()->withErrorMessage("Email is already exist.");
+        } else {
+
+            $user = new User;
+            $user->name = $data['name'];
+            $user->password = bcrypt($data['password']);
+            $user->email = $data['email'];
+            $user->save();
+
+            // dd($data);
+            
+            $attemptData = [
+                'email' => $data['email'],
+                'password' => $data['password']
+            ];
+
+            $attempt = Auth::attempt($attemptData);
+
+            if ($attempt) {
+                session()->put('userSession', $data['email']);
+                return redirect('/cart')->withSuccessMessage("Welcome!");
+            } else {
+                return redirect()->back()->withErrorMessage("Something is wrong!");
+            }    
+        }
     }
 
     public function checkEmail() {
@@ -29,5 +53,64 @@ class UserController extends Controller
     	} else {
     		echo "true";
     	} 
+    }
+
+    public function login() {
+        if ( request()->isMethod('post') ) {
+            $data = request()->all();
+            $attemptData = [
+                'email' => $data['email'],
+                'password' => $data['password']
+            ];
+
+            $attempt = Auth::attempt($attemptData);
+
+            if ($attempt) {
+                session()->put('userSession', $data['email']);
+                return redirect('/cart');
+            } else {
+                return redirect()->back()->withErrorMessage("Invalid Email or password.");
+            }  
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function account() {
+        if ( request()->isMethod('post') ) {
+            $data = request()->all();
+            $user = User::find($data['user_id']);
+            $user->name     = $data['name'];
+            $user->address  = $data['address'];
+            $user->city     = $data['city'];
+            $user->state    = $data['state'];
+            $user->country  = $data['country'];
+            $user->pincode  = $data['pincode'];
+            $user->mobile   = $data['mobile'];
+            $user->save();
+            return redirect()->back()->withSuccessMessage('Your information is updated successfully.');
+        }
+
+        $userDetails = auth()->user();
+        $countries = Country::get();
+        return view('users.account', compact('countries', 'userDetails'));
+    }
+
+    public function checkPassword() {
+        $sentPassword = request()->currentPassword;
+        $user = auth()->user();
+        if (Hash::check($sentPassword, $user->password)) {
+            echo 'true';
+            return;
+        } else {
+            echo 'false';
+            return;
+        }
+    }
+
+    public function logout() {
+        Auth::logout();
+        session()->forget('userSession');
+        return redirect('/');
     }
 }

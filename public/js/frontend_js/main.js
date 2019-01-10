@@ -131,11 +131,114 @@ $().ready(function() {
 
 	});
 
-	$('#password').passtrength({
+	$('#loginForm').validate({
+		rules:{
+			password:{
+				required:true
+			},
+			email:{
+				required:true,
+				email:true
+			}
+		},
+		messages:{
+			password:{
+				required:"Password is required."
+			},
+			email:{
+				required:"Email is required.",
+				email:"Your email is not valid."
+			}
+		}
+	});
+
+	$('#accountForm').validate({
+		rules:{
+			name:{
+				required:true,
+				minlength:2,
+				accept:"[a-zA-Z]+"
+			},
+			address:{
+				required:true
+			},
+			city:{
+				required:true
+			},
+			state:{
+				required:true
+			},
+			country:{
+				required:true
+			},
+			pincode:{
+				required:true
+			},
+			mobile:{
+				required:true,
+				accept:"[0-9]+"
+			}
+		},
+		messages:{
+			name:{
+				required:"Name is required.",
+				minlength:"Your name must be more than 2 characters.",
+				accept:"Enter characters only."
+			},
+			address:{
+				required:"Address is required."
+			},
+			city:{
+				required:"City is required."
+			},
+			state:{
+				required:"State is required."
+			},
+			country:{
+				required:"Country is required."
+			},
+			pincode:{
+				required:"Pincode is required."
+			},
+			mobile:{
+				required:"Mobile Number is required.",
+				accept:"Enter numbers only."
+			}
+		}
+	});
+
+	$('#r-password').passtrength({
 		minChars: 6,
 		passwordToggle: true,
 		tooltip: true,
 		eyeImg: "eye.svg"
+	});
+
+	$("#newPassword").click(function() {
+		var curPass = $("#curPassword").val();
+		var csrfToken = $("#csrf-token").val();
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': csrfToken
+			},
+			type:'post',
+			url:'check-user-password',
+			data:{currentPassword:curPass},
+			success: function(res) {
+				if (res == 'false') {
+					$('#curPassword').html('<font color="red">Incorrect Password, Try Again.</font>');
+				}
+				else if (res == 'true') {
+					$('#curPassword').html('<font color="green">Correct Password.</font>');
+				} 
+				else {
+					$('#curPassword').html('<font color="#c9c9c9">Checking...</font>');
+				}
+			},
+			error: function() {
+				alert('Error');
+			}
+		});
 	});
 });
 

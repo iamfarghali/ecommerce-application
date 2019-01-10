@@ -1,5 +1,5 @@
 <?php
-// Last Video Number is 72
+// Last Video Number is 75
 
 
 /*
@@ -32,9 +32,22 @@
 	Route::get('/cart/update-quantity/{id}/{quantity}', 'ProductsController@updateCartQuantity');
 	// Apply Coupon
 	Route::post('/cart/apply-coupon', 'ProductsController@applyCoupon');
-	// Register, Login and Logout user
-	Route::match(['get', 'post'], '/login-register', 'UserController@loginRegister');
+	// Register, Login
+	Route::get('/login-register', 'UserController@loginRegister');
+	Route::post('/user-register', 'UserController@register');
+	Route::match(['get', 'post'], '/login-user', 'UserController@login');
+	// check email, Logout
 	Route::match(['get', 'post'], '/check-email', 'UserController@checkEmail');
+	Route::get('/user-logout', 'UserController@logout');
+	Route::group(['middleware' => ['userAuth']], function() {
+
+		// account
+		Route::match(['get', 'post'], '/account', 'UserController@account');
+
+		// check user password [AJAX Request]
+		Route::post('/check-user-password', 'UserController@checkPassword');
+
+	});
 
 
 

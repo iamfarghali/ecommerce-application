@@ -439,4 +439,9 @@ class ProductsController extends Controller {
 			]; 
 			return $productData;
 		}
+
+		// checout
+		public function checkout() {
+			return view('products.checkout');
+		}
 }

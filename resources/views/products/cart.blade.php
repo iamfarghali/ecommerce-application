@@ -8,19 +8,6 @@
 				  <li class="active">Shopping Cart</li>
 				</ol>
 			</div>
-	        @if(session()->has('success_message'))
-		        <br>
-	          <div class="alert alert-success fade in">
-	              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	              <p>{{session()->get('success_message')}}</p>
-	          </div>
-	        @elseif(session()->has('error_message'))
-	           <br>
-	          <div class="alert alert-danger fade in">
-	              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-	              <p>{{session()->get('error_message')}}</p>
-	          </div>
-		    @endif
 			<div class="table-responsive cart_info">
 				<table class="table table-condensed">
 					<thead>
@@ -107,7 +94,7 @@
 							@endif
 						</ul>
 							<a class="btn btn-default update" href="">Update</a>
-							<a class="btn btn-default check_out" href="">Check Out</a>
+							<a class="btn btn-default check_out" href="{{url("/checkout")}}">Check Out</a>
 					</div>
 				</div>
 			</div>

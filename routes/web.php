@@ -1,5 +1,5 @@
 <?php
-// Last Video Number is 75
+// Last Video Number is 81
 
 
 /*
@@ -48,6 +48,9 @@
 		Route::post('/check-user-password', 'UserController@checkPassword');
 		// Update password
 		Route::post('/update-password', 'UserController@updatePassword');
+
+		// checkout
+		Route::match(['get', 'post'], '/checkout', 'ProductsController@checkout');
 
 	});
 

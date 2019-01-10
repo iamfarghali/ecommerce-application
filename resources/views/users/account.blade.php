@@ -1,6 +1,6 @@
 @extends('layouts.frontLayout.front_design')
 @section('content')
-		<section id="form">
+		<section id="form" style="margin-top: 20px;">
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-4 col-sm-offset-1">

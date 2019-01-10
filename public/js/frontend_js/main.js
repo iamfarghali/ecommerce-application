@@ -226,13 +226,16 @@ $().ready(function() {
 			data:{currentPassword:curPass},
 			success: function(res) {
 				if (res == 'false') {
-					$('#curPassword').html('<font color="red">Incorrect Password, Try Again.</font>');
+					$('font').remove();
+					$('#curPassword').after('<font style="color:red;">Incorrect Password, Try Again.</font>');
 				}
 				else if (res == 'true') {
-					$('#curPassword').html('<font color="green">Correct Password.</font>');
+					$('font').remove();
+					$('#curPassword').after('<font style="color:green;">Correct Password.</font>');
 				} 
 				else {
-					$('#curPassword').html('<font color="#c9c9c9">Checking...</font>');
+					$('font').remove();
+					$('#curPassword').after('<font style="color:#c9c9c9;">Checking...</font>');
 				}
 			},
 			error: function() {

@@ -37,9 +37,9 @@
 						<h2>Update Password</h2>
 						<form id="updatePasswordForm" name="updatePasswordForm" action="{{url('/update-password')}}" method="post">
 							<input id="csrf-token" type="hidden" name="_token" value="{{csrf_token()}}">
-							<input id="curPassword" type="password" name="currentPassword">
-							<input id="newPassword" type="password" name="newPassword">
-							<input id="conPassword" type="password" name="confirmPassword">
+							<input id="curPassword" type="password" name="currentPassword" placeholder="Current Password">
+							<input id="newPassword" type="password" name="newPassword" placeholder="New Password">
+							<input id="conPassword" type="password" name="confirmPassword" placeholder="Confirm Password">
 							<button type="submit" class="btn btn-default">Update</button>
 						</form>
 					</div>

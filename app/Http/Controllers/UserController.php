@@ -108,6 +108,19 @@ class UserController extends Controller
         }
     }
 
+    public function updatePassword() {
+        $data = request()->all();
+        $user = auth()->user();
+
+        if ($data['newPassword'] == $data['confirmPassword'] && Hash::check($data['newPassword'], $user->password) ) {
+            $user->password = bcrypt($data['newPassword']);
+            $user->save();
+            return redirect()->back()->withSuccessMessage('Password is updated successfully.');    
+        } else {
+            return redirect()->back()->withErrorMessage('Password Incorrect Or make sure the confirm password is the same new password.');
+        }
+    }
+
     public function logout() {
         Auth::logout();
         session()->forget('userSession');

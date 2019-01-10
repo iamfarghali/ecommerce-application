@@ -46,6 +46,8 @@
 
 		// check user password [AJAX Request]
 		Route::post('/check-user-password', 'UserController@checkPassword');
+		// Update password
+		Route::post('/update-password', 'UserController@updatePassword');
 
 	});
 

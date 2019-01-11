@@ -6,6 +6,7 @@ use App\Products;
 use App\ProductsImage;
 use App\ProductsAttribute;
 use App\Coupon;
+use App\Country;
 use Image;
 use DB;
 
@@ -442,6 +443,8 @@ class ProductsController extends Controller {
 
 		// checout
 		public function checkout() {
-			return view('products.checkout');
+			$user = auth()->user();
+			$countries = Country::get();
+			return view('products.checkout', compact('user', 'countries'));
 		}
 }

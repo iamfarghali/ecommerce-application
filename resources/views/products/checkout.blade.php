@@ -8,22 +8,29 @@
 						<div class="login-form">
 							<h2>Bill To</h2>
 							<div class="form-group">
-								<input class="form-control" type="text" name="name" placeholder="Billing Name" />
+								<input class="form-control" type="text" id="billing_name" name="billing_name" value="{{$user->name}}" placeholder="Billing Name" />
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="address" placeholder="Billing Address" />
+								<input class="form-control" type="text" id="billing_address" name="billing_address" value="{{$user->address}}" placeholder="Billing Address" />
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="city" placeholder="Billing City" />
+								<input class="form-control" type="text" id="billing_city" name="billing_city" value="{{$user->city}}" placeholder="Billing City" />
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="country" placeholder="Billing Country" />
+								<select  class="form-control" name="billing_country" id="billing_country">
+									<option value="">Select Country</option>
+									@foreach( $countries as $country )
+										<option value="{{$country->country_name}}" @if( $user->country == $country->country_name ) selected @endif >
+											{{$country->country_name}}
+										</option>
+									@endforeach
+								</select>
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="pincode" placeholder="Billing Pincode" />
+								<input class="form-control" type="text" id="billing_pincode" name="billing_pincode" value="{{$user->pincode}}" placeholder="Billing Pincode" />
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="mobile" placeholder="Billing Mobile" />
+								<input class="form-control" type="text" id="billing_mobile" name="billing_mobile" value="{{$user->mobile}}" placeholder="Billing Mobile" />
 							</div>
 							<div class="form-check">
 								<input type="checkbox" class="form-check-input" id="billToShip">

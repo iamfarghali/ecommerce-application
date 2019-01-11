@@ -45,22 +45,29 @@
 						<div class="signup-form">
 							<h2>Ship To</h2>
 							<div class="form-group">
-								<input class="form-control" type="text" name="name" placeholder="Shipping Name" />
+								<input class="form-control" type="text" id="shipping_name" name="shipping_name" placeholder="Shipping Name" />
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="address" placeholder="Shipping Address" />
+								<input class="form-control" type="text" id="shipping_address"  name="shipping_address" placeholder="Shipping Address" />
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="city" placeholder="Shipping City" />
+								<input class="form-control" type="text" id="shipping_city"  name="shipping_city" placeholder="Shipping City" />
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="country" placeholder="Shipping Country" />
+								<select  class="form-control" name="shipping_country" id="shipping_country">
+									<option value="">Select Country</option>
+									@foreach( $countries as $country )
+										<option value="{{$country->country_name}}">
+											{{$country->country_name}}
+										</option>
+									@endforeach
+								</select>
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="pincode" placeholder="Shipping Pincode" />
+								<input class="form-control" type="text" id="shipping_pincode"  name="shipping_pincode" placeholder="Shipping Pincode" />
 							</div>
 							<div class="form-group">
-								<input class="form-control" type="text" name="mobile" placeholder="Shipping Mobile" />
+								<input class="form-control" type="text" id="shipping_mobile"  name="shipping_mobile" placeholder="Shipping Mobile" />
 							</div>
 							<button type="submit" class="btn btn-default">Checkout</button>
 						</div>

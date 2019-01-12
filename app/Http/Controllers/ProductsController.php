@@ -7,6 +7,7 @@ use App\ProductsImage;
 use App\ProductsAttribute;
 use App\Coupon;
 use App\Country;
+use App\DeliveryAddress;
 use Image;
 use DB;
 
@@ -444,7 +445,55 @@ class ProductsController extends Controller {
 		// checout
 		public function checkout() {
 			$user = auth()->user();
+			if (request()->isMethod('post')) {
+				$data = request()->all();
+				foreach ($data as $k => $val) {
+					if (empty($val)) {
+						return redirect()->back()->withErrorMessage('Please fill all fields to checkout!');
+					}
+				}
+				$user->name = $data['billing_name'];
+				$user->address = $data['billing_address'];
+				$user->city = $data['billing_city'];
+				$user->state = $data['billing_state'];
+				$user->country = $data['billing_country'];
+				$user->pincode = $data['billing_pincode'];
+				$user->mobile = $data['billing_mobile'];
+				$user->update();
+
+				$shippingAddresses = DeliveryAddress::where('user_id', $user['id'])->count();
+				if ($shippingAddresses > 0 ) {
+					$shippingAddresses = DeliveryAddress::where('user_id', $user['id'])->first();
+					$shippingAddresses->name = $data['shipping_name'];
+					$shippingAddresses->address = $data['shipping_address'];
+					$shippingAddresses->city = $data['shipping_city'];
+					$shippingAddresses->state = $data['shipping_state'];
+					$shippingAddresses->country = $data['shipping_country'];
+					$shippingAddresses->pincode = $data['shipping_pincode'];
+					$shippingAddresses->mobile = $data['shipping_mobile'];
+					$shippingAddresses->update();
+
+				} else {
+					// dd($data);
+					$shippingAddresses = new DeliveryAddress;
+					$shippingAddresses->name = $data['shipping_name'];
+					$shippingAddresses->user_id = $user['id'];
+					$shippingAddresses->user_email = $user['email'];
+					$shippingAddresses->address = $data['shipping_address'];
+					$shippingAddresses->city = $data['shipping_city'];
+					$shippingAddresses->state = $data['shipping_state'];
+					$shippingAddresses->country = $data['shipping_country'];
+					$shippingAddresses->pincode = $data['shipping_pincode'];
+					$shippingAddresses->mobile = $data['shipping_mobile'];
+					$shippingAddresses->save();
+				}
+			}
+
 			$countries = Country::get();
-			return view('products.checkout', compact('user', 'countries'));
+			$shippingAddresses = DeliveryAddress::where('user_id', $user['id'])->count();
+			if ($shippingAddresses > 0 ) {
+				$shippingAddresses = DeliveryAddress::where('user_id', $user['id'])->first();
+			}
+			return view('products.checkout', compact('user', 'countries', 'shippingAddresses'));
 		}
 }

@@ -1,5 +1,5 @@
 <?php
-// Last Video Number is 84
+// Last Video Number is 87
 
  
 /*
@@ -51,6 +51,9 @@
 
 		// checkout
 		Route::match(['get', 'post'], '/checkout', 'ProductsController@checkout');
+
+		// order review
+		Route::match(['get', 'post'], '/order-review', 'ProductsController@orderReview');
 
 	});
 

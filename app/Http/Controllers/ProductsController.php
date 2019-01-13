@@ -487,7 +487,12 @@ class ProductsController extends Controller {
 					$shippingAddresses->mobile = $data['shipping_mobile'];
 					$shippingAddresses->save();
 				}
+				return redirect()->action('ProductsController@orderReview');
 			}
+
+			// update cart table with user email
+			$session_id = session()->get('session_id');
+			DB::table('cart')->where(['session_id' => $session_id])->update(['user_email' => $user['email']]);
 
 			$countries = Country::get();
 			$shippingAddresses = DeliveryAddress::where('user_id', $user['id'])->count();
@@ -495,5 +500,11 @@ class ProductsController extends Controller {
 				$shippingAddresses = DeliveryAddress::where('user_id', $user['id'])->first();
 			}
 			return view('products.checkout', compact('user', 'countries', 'shippingAddresses'));
+		}
+
+		public function orderReview() {
+			$user = auth()->user();
+			$shippingAddress = DeliveryAddress::where('user_id', $user['id'])->first();
+			return view('products.order-review', compact('user', 'shippingAddress'));
 		}
 }

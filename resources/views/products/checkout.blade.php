@@ -2,6 +2,12 @@
 @section('content')
 	<section id="form" style="margin-top: 20px;">
 		<div class="container">
+			<div class="breadcrumbs">
+				<ol class="breadcrumb">
+				  <li><a href="{{url('/')}}">Home</a></li>
+				  <li class="active">Check out</li>
+				</ol>
+			</div>
 			<form action="{{url('/checkout')}}" method="post">
 				{{csrf_field()}}
 				<div class="row">
@@ -49,7 +55,7 @@
 						<div class="signup-form">
 							<h2>Ship To</h2>
 							<div class="form-group">
-								<input class="form-control" type="text" id="shipping_name" name="shipping_name" value="{{$shippingAddresses->mobile}}" placeholder="Shipping Name" />
+								<input class="form-control" type="text" id="shipping_name" name="shipping_name" value="{{$shippingAddresses->name}}" placeholder="Shipping Name" />
 							</div>
 							<div class="form-group">
 								<input class="form-control" type="text" id="shipping_address" name="shipping_address" value="{{$shippingAddresses->address}}" placeholder="Shipping Address" />

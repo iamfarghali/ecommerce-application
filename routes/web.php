@@ -55,6 +55,9 @@
 		// order review
 		Route::match(['get', 'post'], '/order-review', 'ProductsController@orderReview');
 
+		// place order
+		Route::match(['get', 'post'], '/place-order', 'ProductsController@placeOrder');
+
 	});
 
 

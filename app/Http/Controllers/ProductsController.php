@@ -269,7 +269,7 @@ class ProductsController extends Controller {
 			}
 
 
-	// Methods For Application [NOT] admin panel
+	// Methods For Application
 		public function products($categoryName = null, $brandName = null) {
 			$countMainCategories = Category::where(['url'=>$categoryName, 'status'=>1])->count();
 			$countBrand = Category::where([ ['url', '=', $brandName], ['parent_id', '<>', 0], ['status', '=', '1'] ])->count();
@@ -358,7 +358,6 @@ class ProductsController extends Controller {
 		public function deleteCartProduct( $id = null ) {
 			session()->forget('couponCode');
 			session()->forget('couponAmount');
-
 			DB::table('cart')->where('id', $id)->delete();
 			return redirect()->back()->withSuccessMessage('Item is deleted Successfully.');
 		}
@@ -495,6 +494,7 @@ class ProductsController extends Controller {
 			DB::table('cart')->where(['session_id' => $session_id])->update(['user_email' => $user['email']]);
 
 			$countries = Country::get();
+			$shippingAddresses = [];
 			$shippingAddresses = DeliveryAddress::where('user_id', $user['id'])->count();
 			if ($shippingAddresses > 0 ) {
 				$shippingAddresses = DeliveryAddress::where('user_id', $user['id'])->first();
@@ -505,6 +505,18 @@ class ProductsController extends Controller {
 		public function orderReview() {
 			$user = auth()->user();
 			$shippingAddress = DeliveryAddress::where('user_id', $user['id'])->first();
-			return view('products.order-review', compact('user', 'shippingAddress'));
+			$userCart = DB::table('cart')->where(['user_email' => $user->email])->get();
+			foreach ($userCart as $key => $product) {
+				$productDetails = Products::where('id', $product->product_id)->first();
+				$userCart[$key]->image = $productDetails->product_image;
+			}
+
+			return view('products.order-review', compact('user', 'shippingAddress', 'userCart'));
+		}
+
+		public function placeOrder() {
+			if (request()->isMethod("post")) {
+				dd(request()->all());
+			}
 		}
 }

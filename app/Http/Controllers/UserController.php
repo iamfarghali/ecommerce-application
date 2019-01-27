@@ -66,6 +66,9 @@ class UserController extends Controller
             $attempt = Auth::attempt($attemptData);
 
             if ($attempt) {
+                if (! empty(session()->get('userSession')) ) {
+                    session()->forget('userSession');
+                }
                 session()->put('userSession', $data['email']);
                 return redirect('/cart');
             } else {
@@ -122,8 +125,8 @@ class UserController extends Controller
     }
 
     public function logout() {
-        Auth::logout();
         session()->forget('userSession');
+        Auth::logout();
         return redirect('/');
     }
 }

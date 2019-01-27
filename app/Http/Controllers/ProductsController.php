@@ -8,6 +8,8 @@ use App\ProductsAttribute;
 use App\Coupon;
 use App\Country;
 use App\DeliveryAddress;
+use App\Order;
+use App\OrdersProduct;
 use Image;
 use DB;
 
@@ -310,8 +312,13 @@ class ProductsController extends Controller {
 		}
 
 		public function cart() {
-			$session_id = session()->get('session_id');
-			$userCart = DB::table('cart')->where('session_id', $session_id)->get();
+			if (auth()->check()) {
+				$user_email = auth()->user()->email;
+				$userCart = DB::table('cart')->where('user_email', $user_email)->get();
+			} else {			
+				$session_id = session()->get('session_id');
+				$userCart = DB::table('cart')->where('session_id', $session_id)->get();
+			}
 
 			foreach ($userCart as $key => $product) {
 				$productDetails = Products::where('id', $product->product_id)->first();
@@ -334,7 +341,13 @@ class ProductsController extends Controller {
 				return redirect('/cart')->withErrorMessage('Product Is Already Exist, You can update the quantity from here');
 			}
 
-			if (empty($data['user_eamil'])) {$data['user_email'] = '';}
+			if (! auth()->check() ) {
+				$data['user_email'] = '';
+			} else {
+				$user_email = auth()->user()->email;
+				$data['user_email'] = $user_email;
+			}
+
 			$session_id = session()->get('session_id');
 			if (empty($session_id)) {
 				$session_id = str_random(40);
@@ -407,8 +420,13 @@ class ProductsController extends Controller {
 				}
 
 				// coupon is valid
-				$session_id = session('session_id');
-				$userCart = DB::table('cart')->where('session_id', $session_id)->get();
+				if (auth()->check()) {
+					$user_email = auth()->user()->email;
+					$userCart = DB::table('cart')->where('user_email', $user_email)->get();
+				} else {
+					$session_id = session('session_id');
+					$userCart = DB::table('cart')->where('session_id', $session_id)->get();
+				}
 				$total_amount = 0;
 				foreach ($userCart as $item) {
 					$total_amount += $item->quantity * $item->price;
@@ -516,7 +534,62 @@ class ProductsController extends Controller {
 
 		public function placeOrder() {
 			if (request()->isMethod("post")) {
-				dd(request()->all());
+				$data = request()->except('_token');
+
+				if ( empty(session()->get('couponCode')) ) {
+					$data['coupon_code'] = "";
+					$data['coupon_amount'] = "";
+				} else {
+					$data['coupon_code'] = session()->get('couponCode');
+					$data['coupon_amount'] = session()->get('couponAmount');
+				}
+
+				$user_id = auth()->user()->id;
+				$user_email = auth()->user()->email;
+
+				// get shipping address of this user
+				$shipping = DeliveryAddress::where('user_email', $user_email)->first();
+				// create order model
+				$order = new Order;
+				$order->user_id = $shipping->user_id;
+				$order->user_email = $shipping->user_email;
+				$order->name = $shipping->name;
+				$order->address = $shipping->address;
+				$order->city = $shipping->city;
+				$order->state = $shipping->state;
+				$order->country = $shipping->country;
+				$order->pincode = $shipping->pincode;
+				$order->mobile = $shipping->mobile;
+				$order->order_status = "New";
+				$order->shipping_charges = 0;
+				$order->coupon_code = $data['coupon_code'];
+				$order->coupon_amount = $data['coupon_amount'];
+				$order->grand_total = $data['grand_total'];
+				$order->payment_method = $data['payment_method'];
+				$order->save();
+
+				$order_id = DB::getPdo()->lastInsertId();
+
+				$cartProducts = DB::table("cart")->where("user_email", $user_email)->get();
+				foreach ($cartProducts as $p) {
+					$cartPro = new OrdersProduct;
+					$cartPro->order_id = $order_id;
+					$cartPro->user_id = $user_id;
+					$cartPro->product_id = $p->product_id;
+					$cartPro->product_name = $p->product_name;
+					$cartPro->product_code = $p->product_code;
+					$cartPro->product_color = $p->product_color;
+					$cartPro->product_size = $p->size;
+					$cartPro->product_price = $p->price;
+					$cartPro->product_qty = $p->quantity;
+					$cartPro->save();
+				}
+
+				return redirect()->back();
+
+
+
+
 			}
 		}
 }

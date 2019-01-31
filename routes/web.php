@@ -64,6 +64,12 @@
 		// paypal page
 		Route::get('/paypal', 'ProductsController@paypal');
 
+		// paypal thanks page
+		Route::get('/paypal/thanks', 'ProductsController@thanksPaypal');
+
+		// paypal thanks page
+		Route::get('/paypal/cancel', 'ProductsController@cancelPaypal');
+
 		// user's orders page
 		Route::get('/orders', 'ProductsController@userOrders');
 		// user's order details
@@ -118,9 +124,16 @@
 				Route::match(['get', 'post'], 'admin/add-banner', 'BannersController@addBanner');
 				// Show All Banners
 				Route::get('admin/view-banners', 'BannersController@viewBanners')->name('admin.show-banners');
-
+				// edit banner
 				Route::match(['get', 'post'], 'admin/edit-banner/{id}', 'BannersController@editBanner')->name('admin.edit-banner');
+				// delete banner
 				Route::match(['get', 'post'], 'admin/delete-banner/{id}', 'BannersController@deleteBanner')->name('admin.delete-banner');
+
+			// Orders
+				// show all orders
+				Route::get('/admin/view-orders', 'ProductsController@viewOrders');
+				// order details
+				Route::get('/admin/view-order/{id}', 'ProductsController@viewOrderDetails');
 				
 
 			// Product AJAX

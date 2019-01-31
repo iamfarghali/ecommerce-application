@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 use App\Category;
-use App\Products;
-use App\ProductsImage;
-use App\ProductsAttribute;
 use App\Coupon;
 use App\Country;
 use App\DeliveryAddress;
+use App\Products;
+use App\ProductsImage;
+use App\ProductsAttribute;
 use App\Order;
 use App\OrdersProduct;
-use Image;
+use App\User;
 use DB;
+use Image;
 
 class ProductsController extends Controller {
 	// Methods For Admin Panel
@@ -269,6 +270,20 @@ class ProductsController extends Controller {
 				}
 				return redirect()->back()->withSuccessMessage('Data Is Update Successfully.');
 			}
+
+		// show Orders
+		public function viewOrders() {
+			$orders = Order::with('orders')->orderBy('id', 'DESC')->get();
+			return view('admin.orders.view_orders', compact('orders'));
+		}
+
+		// show order details
+		public function viewOrderDetails($order_id) {
+			$orderDetails = Order::with('orders')->where('id', $order_id)->first();
+			$userDetails = User::where('id', $orderDetails->user_id)->first();
+			return view('admin.orders.order_details', compact('orderDetails', 'userDetails'));
+		}
+
 
 
 	// Methods For Application
@@ -614,5 +629,13 @@ class ProductsController extends Controller {
 			$user_email = auth()->user()->email;
 			DB::table('cart')->where('user_email', $user_email)->delete();
 			return view('orders.paypal');
+		}
+
+		public function thanksPaypal() {
+			return view('orders.thanks_paypal');
+		}
+
+		public function cancelPaypal() {
+			return view('orders.cancel_paypal');
 		}
 }

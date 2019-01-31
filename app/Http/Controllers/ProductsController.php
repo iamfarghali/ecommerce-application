@@ -585,12 +585,19 @@ class ProductsController extends Controller {
 				}
 				session()->put('order_id', $order_id);
 				session()->put('grand_total', $data['grand_total']);
-				
+
 				return redirect("/thanks");
 			}
 		}
 
 		public function thanks() {
+			$user_email = auth()->user()->email;
+			DB::table('cart')->where('user_email', $user_email)->delete();
 			return view('products.thanks');
+		}
+
+		public function userOrders() {
+			$orders = Order::with('orders')->where('user_id', auth()->user()->id)->get();
+			return view('products.user_orders', compact('orders'));
 		}
 }

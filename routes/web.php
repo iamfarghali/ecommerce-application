@@ -60,6 +60,9 @@
 
 		// thanks page
 		Route::get('/thanks', 'ProductsController@thanks');
+
+		// user's orders page
+		Route::get('/orders', 'ProductsController@userOrders');
 	});
 
 

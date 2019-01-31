@@ -284,6 +284,15 @@ class ProductsController extends Controller {
 			return view('admin.orders.order_details', compact('orderDetails', 'userDetails'));
 		}
 
+		// update order status
+		public function updateOrderStatus() {
+			if (request()->isMethod('post')) {
+				$data = request()->all();
+				Order::where('id', $data['order_id'])->update(['order_status' => $data['order_status']]);
+				return redirect()->back()->withSuccessMessage('Order Status is Updated Successfully.');
+			}
+		}
+
 
 
 	// Methods For Application

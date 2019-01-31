@@ -11,6 +11,17 @@
   </div>
   <div class="container-fluid">
     <hr>
+	@if(session()->has('success_message'))
+      <div class="alert alert-success fade in">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <p>{{session()->get('success_message')}}</p>
+      </div>
+	@else
+		<div class="alert alert-danger fade in">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <p>{{session()->get('error_message')}}</p>
+        </div>
+	@endif
     <div class="row-fluid">
 	    <div class="span6">
 	        <div class="widget-box">
@@ -27,6 +38,10 @@
 	                <tr>
 	                  <td>Order Total</td>
 	                  <td>$ {{$orderDetails->grand_total}}</td>
+	                </tr>
+	                <tr>
+	                  <td>Order Status</td>
+	                  <td>{{$orderDetails->order_status}}</td>
 	                </tr>
 	                <tr>
 	                  <td>Shipping Charges</td>
@@ -98,13 +113,29 @@
 	            <h5>Update Order Status</h5>
 	          </div>
 	          <div class="widget-content nopadding">
-	            <table class="table table-striped table-bordered">
-	              <tbody>
-	                <tr>
-	                  <td>Coming Soon.</td>
-	                </tr>
-	              </tbody>
-	            </table>
+	          	<form method="post" action="{{url('admin/update-order-status')}}">
+	          		{{csrf_field()}}
+	          		<input type="hidden" name="order_id" value="{{$orderDetails->id}}">
+	          		<table width="100%" class="table table-striped">
+	          			<tr>
+	          				<td>
+				          		<select name="order_status" id="order_status" class="control-label" required>
+				          			<option value="" selected>Select</option>
+				          			<option value="New">New</option>
+				          			<option value="Pending">Pending</option>
+				          			<option value="Cancelled">Cancelled</option>
+				          			<option value="In Process">In Process</option>
+				          			<option value="Shipped">Shipped</option>
+				          			<option value="Delivered">Delivered</option>
+				          			<option value="Paid">Paid</option>
+				          		</select>
+	          				</td>
+	          				<td>
+	          					<input class="form-control btn btn-success" type="submit" value="Update Status">
+	          				</td>
+	          			</tr>
+	          		</table>
+	          	</form>
 	          </div>
 	        </div>
 

@@ -1,5 +1,5 @@
 <?php
-// Last Video Number is #80
+// Last Video Number is #91
 
  
 /*
@@ -134,6 +134,8 @@
 				Route::get('/admin/view-orders', 'ProductsController@viewOrders');
 				// order details
 				Route::get('/admin/view-order/{id}', 'ProductsController@viewOrderDetails');
+				// update order status
+				Route::post('/admin/update-order-status', 'ProductsController@updateOrderStatus');
 				
 
 			// Product AJAX

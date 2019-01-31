@@ -58,6 +58,8 @@
 		// place order
 		Route::match(['get', 'post'], '/place-order', 'ProductsController@placeOrder');
 
+		// thanks page
+		Route::get('/thanks', 'ProductsController@thanks');
 	});
 
 

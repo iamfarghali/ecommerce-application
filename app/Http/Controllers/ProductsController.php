@@ -344,8 +344,7 @@ class ProductsController extends Controller {
 			if (! auth()->check() ) {
 				$data['user_email'] = '';
 			} else {
-				$user_email = auth()->user()->email;
-				$data['user_email'] = $user_email;
+				$data['user_email'] = auth()->user()->email;
 			}
 
 			$session_id = session()->get('session_id');
@@ -548,25 +547,25 @@ class ProductsController extends Controller {
 				$user_email = auth()->user()->email;
 
 				// get shipping address of this user
-				$shipping = DeliveryAddress::where('user_email', $user_email)->first();
+					$shipping = DeliveryAddress::where('user_email', $user_email)->first();
 				// create order model
-				$order = new Order;
-				$order->user_id = $shipping->user_id;
-				$order->user_email = $shipping->user_email;
-				$order->name = $shipping->name;
-				$order->address = $shipping->address;
-				$order->city = $shipping->city;
-				$order->state = $shipping->state;
-				$order->country = $shipping->country;
-				$order->pincode = $shipping->pincode;
-				$order->mobile = $shipping->mobile;
-				$order->order_status = "New";
-				$order->shipping_charges = 0;
-				$order->coupon_code = $data['coupon_code'];
-				$order->coupon_amount = $data['coupon_amount'];
-				$order->grand_total = $data['grand_total'];
-				$order->payment_method = $data['payment_method'];
-				$order->save();
+					$order = new Order;
+					$order->user_id = $shipping->user_id;
+					$order->user_email = $shipping->user_email;
+					$order->name = $shipping->name;
+					$order->address = $shipping->address;
+					$order->city = $shipping->city;
+					$order->state = $shipping->state;
+					$order->country = $shipping->country;
+					$order->pincode = $shipping->pincode;
+					$order->mobile = $shipping->mobile;
+					$order->order_status = "New";
+					$order->shipping_charges = 0;
+					$order->coupon_code = $data['coupon_code'];
+					$order->coupon_amount = $data['coupon_amount'];
+					$order->grand_total = $data['grand_total'];
+					$order->payment_method = $data['payment_method'];
+					$order->save();
 
 				$order_id = DB::getPdo()->lastInsertId();
 
@@ -584,12 +583,14 @@ class ProductsController extends Controller {
 					$cartPro->product_qty = $p->quantity;
 					$cartPro->save();
 				}
-
-				return redirect()->back();
-
-
-
-
+				session()->put('order_id', $order_id);
+				session()->put('grand_total', $data['grand_total']);
+				
+				return redirect("/thanks");
 			}
+		}
+
+		public function thanks() {
+			return view('products.thanks');
 		}
 }

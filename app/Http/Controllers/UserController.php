@@ -7,6 +7,7 @@ use App\User;
 use App\Country;
 use Auth;
 use Hash;
+use DB;
 
 class UserController extends Controller
 {
@@ -66,10 +67,11 @@ class UserController extends Controller
             $attempt = Auth::attempt($attemptData);
 
             if ($attempt) {
-                if (! empty(session()->get('userSession')) ) {
-                    session()->forget('userSession');
-                }
                 session()->put('userSession', $data['email']);
+                if (! empty(session()->get('session_id')) ) {
+                    $session_id = session()->get('session_id');
+                    DB::table('cart')->where('session_id', $session_id)->update(['user_email' => $data['email']]);
+                }
                 return redirect('/cart');
             } else {
                 return redirect()->back()->withErrorMessage("Invalid Email or password.");

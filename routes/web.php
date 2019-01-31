@@ -58,11 +58,16 @@
 		// place order
 		Route::match(['get', 'post'], '/place-order', 'ProductsController@placeOrder');
 
-		// thanks page
+		// thanks page for [COD]
 		Route::get('/thanks', 'ProductsController@thanks');
+
+		// paypal page
+		Route::get('/paypal', 'ProductsController@paypal');
 
 		// user's orders page
 		Route::get('/orders', 'ProductsController@userOrders');
+		// user's order details
+		Route::get('/orders/{id}', 'ProductsController@userOrderDetails');
 	});
 
 

@@ -98,6 +98,7 @@
                                 <li><a href="{{url('/checkout')}}"><i class="fa fa-crosshairs"></i> Checkout</a></li>
                                 <li><a href="{{url('/cart')}}"><i class="fa fa-shopping-cart"></i> Cart</a></li>
                                 @if(auth()->user())
+                                    <li><a href="{{url('/orders')}}"><i class="fa fa-shopping-cart"></i> Orders</a></li>
                                     <li><a href="{{url('/user-logout')}}"><i class="fa fa-sign-out"></i> Logout</a></li>
                                 @else
                                     <li><a href="{{url('/login-register')}}"><i class="fa fa-lock"></i> Login</a></li>

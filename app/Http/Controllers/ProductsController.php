@@ -586,18 +586,33 @@ class ProductsController extends Controller {
 				session()->put('order_id', $order_id);
 				session()->put('grand_total', $data['grand_total']);
 
-				return redirect("/thanks");
+				if ($data['payment_method'] === 'COD') {
+					return redirect("/thanks");
+				} else {
+					return redirect("/paypal");
+				}
 			}
 		}
 
 		public function thanks() {
 			$user_email = auth()->user()->email;
 			DB::table('cart')->where('user_email', $user_email)->delete();
-			return view('products.thanks');
+			return view('orders.thanks');
 		}
 
 		public function userOrders() {
 			$orders = Order::with('orders')->where('user_id', auth()->user()->id)->get();
-			return view('products.user_orders', compact('orders'));
+			return view('orders.user_orders', compact('orders'));
+		}
+
+		public function userOrderDetails($order_id) {
+			$orderDetails =  Order::with('orders')->where('id', $order_id)->first();
+			return view('orders.order_details', compact('orderDetails'));
+		}
+
+		public function paypal() {
+			$user_email = auth()->user()->email;
+			DB::table('cart')->where('user_email', $user_email)->delete();
+			return view('orders.paypal');
 		}
 }

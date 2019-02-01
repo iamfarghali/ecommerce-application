@@ -59,24 +59,43 @@ class UserController extends Controller
     public function login() {
         if ( request()->isMethod('post') ) {
             $data = request()->all();
-            $attemptData = [
+            $attemptAdminData = [
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'admin' => '1',
+            ];
+            $attemptUserData = [
                 'email' => $data['email'],
                 'password' => $data['password']
             ];
 
-            $attempt = Auth::attempt($attemptData);
-
-            if ($attempt) {
+            if (Auth::attempt($attemptAdminData)) 
+            {
+                session()->put('adminSession', $data['email']);
+                session()->put('userSession', $data['email']);
+                
+                if (! empty(session()->get('session_id')) ) {
+                    $session_id = session()->get('session_id');
+                    DB::table('cart')->where('session_id', $session_id)->update(['user_email' => $data['email']]);
+                }
+                return redirect('/cart');
+            } 
+            elseif (Auth::attempt($attemptData)) 
+            {
                 session()->put('userSession', $data['email']);
                 if (! empty(session()->get('session_id')) ) {
                     $session_id = session()->get('session_id');
                     DB::table('cart')->where('session_id', $session_id)->update(['user_email' => $data['email']]);
                 }
                 return redirect('/cart');
-            } else {
+            }
+            else 
+            {
                 return redirect()->back()->withErrorMessage("Invalid Email or password.");
             }  
-        } else {
+        } 
+        else 
+        {
             return redirect()->back();
         }
     }

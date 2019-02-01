@@ -16,7 +16,7 @@
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
           <p>{{session()->get('success_message')}}</p>
       </div>
-	@else
+	@elseif(session()->has('error_message'))
 		<div class="alert alert-danger fade in">
           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
           <p>{{session()->get('error_message')}}</p>

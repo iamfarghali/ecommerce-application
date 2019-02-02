@@ -12,6 +12,7 @@ use App\Order;
 use App\OrdersProduct;
 use App\User;
 use DB;
+use Mail;
 use Image;
 
 class ProductsController extends Controller {
@@ -611,6 +612,12 @@ class ProductsController extends Controller {
 				session()->put('grand_total', $data['grand_total']);
 
 				if ($data['payment_method'] === 'COD') {
+					// send order email
+                    $email = $user_email;
+                    $messageData = ['email' => $email, 'name' => $shipping->name, 'order_id' => $order_id];
+                    Mail::send('emails.order', $messageData, function($message) use($email) {
+                        $message->to($email)->subject('Order Placed - E-Comm Application');
+                    });
 					return redirect("/thanks");
 				} else {
 					return redirect("/paypal");

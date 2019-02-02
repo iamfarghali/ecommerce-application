@@ -142,6 +142,10 @@
 				Route::get('/admin/view-order/{id}', 'ProductsController@viewOrderDetails');
 				// update order status
 				Route::post('/admin/update-order-status', 'ProductsController@updateOrderStatus');
+
+			// Users
+				// Show all users
+				Route::get('/admin/view-users', 'UserController@viewUsers');
 				
 
 			// Product AJAX

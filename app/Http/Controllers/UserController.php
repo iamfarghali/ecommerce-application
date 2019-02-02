@@ -153,6 +153,12 @@ class UserController extends Controller
             return redirect()->back()->withErrorMessage('Password Incorrect Or make sure the confirm password is the same new password.');
         }
     }
+
+    public function viewUsers() {
+        $users = User::get();
+        return view('admin.users.view_users', compact('users'));
+    }
+
     public function confirmUserAccount($code) {
         if (! empty($code)) {
             $email = base64_decode($code);
@@ -175,6 +181,7 @@ class UserController extends Controller
             }
         }
     }
+
     public function logout() {
         session()->flush();
         Auth::logout();

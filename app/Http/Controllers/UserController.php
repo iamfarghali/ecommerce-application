@@ -7,6 +7,7 @@ use App\User;
 use App\Country;
 use Auth;
 use Hash;
+use Mail;
 use DB;
 
 class UserController extends Controller
@@ -28,7 +29,12 @@ class UserController extends Controller
             $user->email = $data['email'];
             $user->save();
 
-            // dd($data);
+            // send register email
+            $email = $data['email'];
+            $messageData = ['email' => $email, 'name' => $data['name']];
+            Mail::send('emails.register', $messageData, function($message) use($email) {
+                $message->to($email)->subject('Registration with E-Commerce Website');
+            });
             
             $attemptData = [
                 'email' => $data['email'],
@@ -80,7 +86,7 @@ class UserController extends Controller
                 }
                 return redirect('/cart');
             } 
-            elseif (Auth::attempt($attemptData)) 
+            elseif (Auth::attempt($attemptUserData)) 
             {
                 session()->put('userSession', $data['email']);
                 if (! empty(session()->get('session_id')) ) {

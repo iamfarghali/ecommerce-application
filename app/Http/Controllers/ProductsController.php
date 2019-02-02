@@ -336,14 +336,6 @@ class ProductsController extends Controller {
 			return view('products.product_details', compact('productDetails', 'productAltImg', 'totalStock', 'relatedProducts'));
 		}
 
-		public function searchProduct() {
-			$data = request()->all();
-			if ($data['product'] != null) {
-				dd($data);
-			}
-			return redirect()->back()->withErrorMessage("Plz enter your search trem.");
-		}
-
 		public function cart() {
 			if (auth()->check()) {
 				$user_email = auth()->user()->email;

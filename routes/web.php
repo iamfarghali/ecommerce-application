@@ -38,9 +38,6 @@
 	Route::post('/user-register', 'UserController@register');
 	Route::match(['get', 'post'], '/login-user', 'UserController@login');
 
-	// search for product
-	Route::post('/search-product', 'ProductsController@searchProduct');
-
 	// check email
 	Route::match(['get', 'post'], '/check-email', 'UserController@checkEmail');
 	// logout

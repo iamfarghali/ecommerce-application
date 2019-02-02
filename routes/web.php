@@ -36,9 +36,15 @@
 	Route::get('/login-register', 'UserController@loginRegister');
 	Route::post('/user-register', 'UserController@register');
 	Route::match(['get', 'post'], '/login-user', 'UserController@login');
-	// check email, Logout
+	// check email
 	Route::match(['get', 'post'], '/check-email', 'UserController@checkEmail');
+	// logout
 	Route::get('/user-logout', 'UserController@logout');
+
+	// confirm account 
+	Route::get('/confirm/{code}', 'UserController@confirmUserAccount');
+
+	// safe zone
 	Route::group(['middleware' => ['userAuth']], function() {
 
 		// account

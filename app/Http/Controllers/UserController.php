@@ -13,7 +13,11 @@ use DB;
 class UserController extends Controller
 {
     public function loginRegister() {
-    	return view('users.login_register');
+        if (auth()->user() == null) {
+        	return view('users.login_register');
+        } else {
+            return redirect('/');
+        }
     }
     
     public function register() {
@@ -30,25 +34,19 @@ class UserController extends Controller
             $user->save();
 
             // send register email
-            $email = $data['email'];
-            $messageData = ['email' => $email, 'name' => $data['name']];
-            Mail::send('emails.register', $messageData, function($message) use($email) {
-                $message->to($email)->subject('Registration with E-Commerce Website');
-            });
+            // $email = $data['email'];
+            // $messageData = ['email' => $email, 'name' => $data['name']];
+            // Mail::send('emails.register', $messageData, function($message) use($email) {
+            //     $message->to($email)->subject('Registration with E-Commerce Website');
+            // });
             
-            $attemptData = [
-                'email' => $data['email'],
-                'password' => $data['password']
-            ];
-
-            $attempt = Auth::attempt($attemptData);
-
-            if ($attempt) {
-                session()->put('userSession', $data['email']);
-                return redirect('/cart')->withSuccessMessage("Welcome!");
-            } else {
-                return redirect()->back()->withErrorMessage("Something is wrong!");
-            }    
+            // send confirmation email
+            $email = $data['email'];
+            $messageData = ['email' => $email, 'name' => $data['name'], 'code' => base64_encode($email)];
+            Mail::send('emails.confirm', $messageData, function($message) use($email) {
+                $message->to($email)->subject('Confirm Your Account Plz.');
+            });
+            return redirect()->back()->withSuccessMessage("Please confirm your email to active your account.");  
         }
     }
 
@@ -88,6 +86,11 @@ class UserController extends Controller
             } 
             elseif (Auth::attempt($attemptUserData)) 
             {
+                $status = auth()->user()->status;
+                if ($status < 1) {
+                    Auth::logout();
+                    return redirect()->back()->withErrorMessage("Your Account Not Active, Check Your E-Mail please.");
+                }
                 session()->put('userSession', $data['email']);
                 if (! empty(session()->get('session_id')) ) {
                     $session_id = session()->get('session_id');
@@ -150,7 +153,28 @@ class UserController extends Controller
             return redirect()->back()->withErrorMessage('Password Incorrect Or make sure the confirm password is the same new password.');
         }
     }
-
+    public function confirmUserAccount($code) {
+        if (! empty($code)) {
+            $email = base64_decode($code);
+            if (User::where('email', $email)->count() > 0) {
+                $user = User::where('email', $email)->first();
+                if ($user->status == 1) {
+                    return redirect('/login-register')->withSuccessMessage('You can login now.');
+                } else {
+                    User::where('email', $email)->update(['status' => '1']);
+                    // send register email
+                    $email = $user->email;
+                    $messageData = ['email' => $email, 'name' => $user->name];
+                    Mail::send('emails.welcome', $messageData, function($message) use($email) {
+                        $message->to($email)->subject('Welcome to E-Commerce Website');
+                    });
+                    return redirect('/login-register')->withSuccessMessage('You can login now.');
+                }
+            } else {
+                return redirect('/login-register')->withErrorMessage('Your Email not found, register please.');    
+            }
+        }
+    }
     public function logout() {
         session()->flush();
         Auth::logout();

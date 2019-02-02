@@ -32,10 +32,15 @@
 	Route::get('/cart/update-quantity/{id}/{quantity}', 'ProductsController@updateCartQuantity');
 	// Apply Coupon
 	Route::post('/cart/apply-coupon', 'ProductsController@applyCoupon');
+
 	// Register, Login
 	Route::get('/login-register', 'UserController@loginRegister');
 	Route::post('/user-register', 'UserController@register');
 	Route::match(['get', 'post'], '/login-user', 'UserController@login');
+
+	// search for product
+	Route::post('/search-product', 'ProductsController@searchProduct');
+
 	// check email
 	Route::match(['get', 'post'], '/check-email', 'UserController@checkEmail');
 	// logout
@@ -95,25 +100,25 @@
 			Route::match(['get', 'post'], '/admin/update-pwd', 'AdminController@updatePassword');
 
 			// Categories Routes
-			Route::match(['get', 'post'], 'admin/add-category', 'CategoryController@addCategory')->name('admin.add-category');
-			Route::match(['get', 'post'], 'admin/edit-category/{id}', 'CategoryController@editCategory')->name('admin.edit-category');
-			Route::match(['get', 'post'], 'admin/delete-category/{id}', 'CategoryController@deleteCategory')->name('admin.delete-category');
-			Route::get('admin/category/{id}', 'CategoryController@showCategory')->name('admin.show-category');
-			Route::get('admin/view-categories', 'CategoryController@viewCategories')->name('admin.show-categories');
+				Route::match(['get', 'post'], 'admin/add-category', 'CategoryController@addCategory')->name('admin.add-category');
+				Route::match(['get', 'post'], 'admin/edit-category/{id}', 'CategoryController@editCategory')->name('admin.edit-category');
+				Route::match(['get', 'post'], 'admin/delete-category/{id}', 'CategoryController@deleteCategory')->name('admin.delete-category');
+				Route::get('admin/category/{id}', 'CategoryController@showCategory')->name('admin.show-category');
+				Route::get('admin/view-categories', 'CategoryController@viewCategories')->name('admin.show-categories');
 
-			//// Products Routes
-			Route::match(['get', 'post'], 'admin/add-product', 'ProductsController@addProduct')->name('admin.add-product');
-			Route::get('admin/view-products', 'ProductsController@viewProducts')->name('admin.show-products');
-			Route::get('admin/product/{id}', 'ProductsController@showProduct')->name('admin.show-product')->where('id', '[0-9]+');
-			Route::match(['get', 'post'], 'admin/edit-product/{id}', 'ProductsController@editProduct')->name('admin.edit-product');
-			Route::match(['get', 'post'], 'admin/delete-product/{id}', 'ProductsController@deleteProduct')->name('admin.delete-product');
-			Route::match(['get', 'post'], 'admin/add-images/{id}', 'ProductsController@addProductImages')->name('admin.add-images');
-			Route::match(['get', 'post'], 'admin/delete-alt-image/{id}', 'ProductsController@deleteAltImage')->name('admin.delete-image');
+			// Products Routes
+				Route::match(['get', 'post'], 'admin/add-product', 'ProductsController@addProduct')->name('admin.add-product');
+				Route::get('admin/view-products', 'ProductsController@viewProducts')->name('admin.show-products');
+				Route::get('admin/product/{id}', 'ProductsController@showProduct')->name('admin.show-product')->where('id', '[0-9]+');
+				Route::match(['get', 'post'], 'admin/edit-product/{id}', 'ProductsController@editProduct')->name('admin.edit-product');
+				Route::match(['get', 'post'], 'admin/delete-product/{id}', 'ProductsController@deleteProduct')->name('admin.delete-product');
+				Route::match(['get', 'post'], 'admin/add-images/{id}', 'ProductsController@addProductImages')->name('admin.add-images');
+				Route::match(['get', 'post'], 'admin/delete-alt-image/{id}', 'ProductsController@deleteAltImage')->name('admin.delete-image');
 
 			// Product Attributes Routes
-			Route::match(['get', 'post'], 'admin/add-attribute/{id}', 'ProductsController@addAttribute');
-			Route::post('admin/edit-attribute', 'ProductsController@editAttribute');
-			Route::get('admin/delete-attribute/{id}', 'ProductsController@deleteAttribute');
+				Route::match(['get', 'post'], 'admin/add-attribute/{id}', 'ProductsController@addAttribute');
+				Route::post('admin/edit-attribute', 'ProductsController@editAttribute');
+				Route::get('admin/delete-attribute/{id}', 'ProductsController@deleteAttribute');
 
 			// Coupon
 				// Add Coupon
@@ -147,12 +152,11 @@
 				// Show all users
 				Route::get('/admin/view-users', 'UserController@viewUsers');
 				
-
 			// Product AJAX
-			// Load Sub-Categories For Main Category
-			Route::get('admin/product/sub-categories', 'ProductsController@loadSubCategories');
-			// Ajax Route Admin Check Password
-			Route::get('/admin/check-pwd', 'AdminController@checkPassword');
+				// Load Sub-Categories For Main Category
+				Route::get('admin/product/sub-categories', 'ProductsController@loadSubCategories');
+				// Ajax Route Admin Check Password
+				Route::get('/admin/check-pwd', 'AdminController@checkPassword');
 		});
 
 	Auth::routes();

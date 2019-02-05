@@ -358,18 +358,23 @@ class ProductsController extends Controller {
 
 			$data = request()->except('_token');
 			$data['size'] = strtolower((explode('-', $data['size']))[1]);
-			$productExist = DB::table('cart')->where([
-				'product_code'	=>	$data['sku'],
-				'session_id'	=>	session()->get('session_id')
-			])->count();
-			if ($productExist > 0) {
-				return redirect('/cart')->withErrorMessage('Product Is Already Exist, You can update the quantity from here');
+			$data['user_email'] = auth()->check() ? auth()->user()->email : '';
+			$productStock = ProductsAttribute::where(['product_id' => $data['product_id'], 'size' => $data['size']])->first();
+
+			// check product stock is available or not
+			if ($productStock->stock < $data['quantity']) {
+				return redirect()->back()->withErrorMessage("Required quantity is not available, Just $productStock->stock items is available.");
+			} 
+			
+			// check if product exists in cart or not
+			if (! auth()->check()) {
+				$productExist = DB::table('cart')->where(['product_code' =>	$data['sku'], 'session_id' => session()->get('session_id')])->count();
+			} else {
+				$productExist = DB::table('cart')->where(['product_code' =>	$data['sku'], 'user_email' => $data['user_email']])->count();
 			}
 
-			if (! auth()->check() ) {
-				$data['user_email'] = '';
-			} else {
-				$data['user_email'] = auth()->user()->email;
+			if ($productExist > 0) {
+				return redirect('/cart')->withErrorMessage('Product Is Already Exist, You can update the quantity from here');
 			}
 
 			$session_id = session()->get('session_id');
@@ -377,11 +382,12 @@ class ProductsController extends Controller {
 				$session_id = str_random(40);
 				session()->put('session_id', $session_id);
 			}
-			$productSKU = ProductsAttribute::where(['product_id' => $data['product_id'], 'size' => $data['size']])->first();
+
+			// insert product information to cart tb
 			DB::table('cart')->insert([
 				'product_id'	=>	$data['product_id'],
 				'product_name'	=>	$data['product_name'],
-				'product_code'	=>	$productSKU->sku,
+				'product_code'	=>	$productStock->sku,
 				'product_color'	=>	$data['product_color'],
 				'size'			=>	$data['size'],
 				'price'			=>	$data['price'],
@@ -402,9 +408,11 @@ class ProductsController extends Controller {
 		public function updateCartQuantity( $id = null, $quantity = null) {
 			session()->forget('couponCode');
 			session()->forget('couponAmount');
+
 			$cartDetails = DB::table('cart')->where('id', $id)->first();
 			$attributeStock = ProductsAttribute::where('sku', $cartDetails->product_code)->first();
 			$updateQuantity = $cartDetails->quantity + $quantity;
+
 			if ($attributeStock->stock >= $updateQuantity) {
 				if ( $quantity == 1 ) {
 					DB::table('cart')->where('id', $id)->increment('quantity');

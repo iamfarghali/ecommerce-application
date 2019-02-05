@@ -80,6 +80,14 @@ class UserController extends Controller
                 
                 if (! empty(session()->get('session_id')) ) {
                     $session_id = session()->get('session_id');
+                    $cartItem = DB::table('cart')->where('session_id', $session_id)->first();
+                    if (! empty($cartItem)) {
+                        $items = DB::table('cart')->where(['user_email' => $data['email'], 'product_code' => $cartItem->product_code])->count();
+                        if ($items > 0) {
+                            DB::table('cart')->where('session_id', $session_id)->delete();
+                            return redirect('/cart')->withErrorMessage('Product Is Already Exist, You can update the quantity from here');
+                        }
+                    }
                     DB::table('cart')->where('session_id', $session_id)->update(['user_email' => $data['email']]);
                 }
                 return redirect('/cart');

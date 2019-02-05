@@ -7,26 +7,32 @@
     <div class="row">
         <div class="col-xs-12">
     		<div class="invoice-title">
-    			<h2>Invoice</h2><h3 class="pull-right">Order # 12345</h3>
+    			<h2>Invoice</h2><h3 class="pull-right">Order # {{$orderDetails->id}}</h3>
     		</div>
     		<hr>
     		<div class="row">
     			<div class="col-xs-6">
     				<address>
     				<strong>Billed To:</strong><br>
-    					John Smith<br>
-    					1234 Main<br>
-    					Apt. 4B<br>
-    					Springfield, ST 54321
+		              	{{$userDetails->name}} <br>
+		              	{{$userDetails->address}} <br>
+		              	{{$userDetails->city}} <br>
+		              	{{$userDetails->state}} <br>
+		              	{{$userDetails->country}} <br>
+		              	{{$userDetails->pincode}} <br>
+		              	{{$userDetails->mobile}}
     				</address>
     			</div>
     			<div class="col-xs-6 text-right">
     				<address>
         			<strong>Shipped To:</strong><br>
-    					Jane Smith<br>
-    					1234 Main<br>
-    					Apt. 4B<br>
-    					Springfield, ST 54321
+    					{{$orderDetails->name}} <br>
+		              	{{$orderDetails->address}} <br>
+		              	{{$orderDetails->city}} <br>
+		              	{{$orderDetails->state}} <br>
+		              	{{$orderDetails->country}} <br>
+		              	{{$orderDetails->pincode}} <br>
+		              	{{$orderDetails->mobile}} 
     				</address>
     			</div>
     		</div>
@@ -34,14 +40,14 @@
     			<div class="col-xs-6">
     				<address>
     					<strong>Payment Method:</strong><br>
-    					Visa ending **** 4242<br>
-    					jsmith@email.com
+    					{{$orderDetails->payment_method}} <br>
+    					{{$orderDetails->user_email}}
     				</address>
     			</div>
     			<div class="col-xs-6 text-right">
     				<address>
     					<strong>Order Date:</strong><br>
-    					March 7, 2014<br><br>
+    					{{$orderDetails->created_at}}<br><br>
     				</address>
     			</div>
     		</div>
@@ -56,55 +62,54 @@
     			</div>
     			<div class="panel-body">
     				<div class="table-responsive">
-    					<table class="table table-condensed">
-    						<thead>
-                                <tr>
-        							<td><strong>Item</strong></td>
-        							<td class="text-center"><strong>Price</strong></td>
-        							<td class="text-center"><strong>Quantity</strong></td>
-        							<td class="text-right"><strong>Totals</strong></td>
-                                </tr>
-    						</thead>
-    						<tbody>
-    							<!-- foreach ($order->lineItems as $line) or some such thing here -->
+						<table class="table table-condensed">
+					        <thead>
+					            <tr>
+					                <th>Code</th>
+					                <th>Name</th>
+					                <th>Price</th>
+					                <th>Size</th>
+					                <th>Color</th>
+					                <th>Quantity</th>
+					            </tr>
+					        </thead>
+					        <tbody>
+					        	@foreach($orderDetails->orders as $pro)
+						            <tr>
+						                <td>{{$pro->product_code}}</td>
+						                <td>{{$pro->product_name}}</td>
+						                <td>$ {{$pro->product_price}}</td>
+						                <td>{{$pro->product_size}}</td>
+						                <td>{{$pro->product_color}}</td>
+						                <td>{{$pro->product_qty}}</td>
+						            </tr>
+					            @endforeach
     							<tr>
-    								<td>BS-200</td>
-    								<td class="text-center">$10.99</td>
-    								<td class="text-center">1</td>
-    								<td class="text-right">$10.99</td>
-    							</tr>
-                                <tr>
-        							<td>BS-400</td>
-    								<td class="text-center">$20.00</td>
-    								<td class="text-center">3</td>
-    								<td class="text-right">$60.00</td>
-    							</tr>
-                                <tr>
-            						<td>BS-1000</td>
-    								<td class="text-center">$600.00</td>
-    								<td class="text-center">1</td>
-    								<td class="text-right">$600.00</td>
-    							</tr>
-    							<tr>
+    								<td class="thick-line"></td>
+    								<td class="thick-line"></td>
     								<td class="thick-line"></td>
     								<td class="thick-line"></td>
     								<td class="thick-line text-center"><strong>Subtotal</strong></td>
-    								<td class="thick-line text-right">$670.99</td>
+    								<td class="thick-line text-right">$ {{$orderDetails->grand_total}}</td>
     							</tr>
     							<tr>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line"></td>
     								<td class="no-line text-center"><strong>Shipping</strong></td>
-    								<td class="no-line text-right">$15</td>
+    								<td class="no-line text-right">$ {{$orderDetails->shipping_charges}}</td>
     							</tr>
     							<tr>
     								<td class="no-line"></td>
     								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
     								<td class="no-line text-center"><strong>Total</strong></td>
-    								<td class="no-line text-right">$685.99</td>
+    								<td class="no-line text-right">$ {{$orderDetails->grand_total + $orderDetails->shipping_charges}}</td>
     							</tr>
-    						</tbody>
-    					</table>
+					        </tbody>
+					    </table>
     				</div>
     			</div>
     		</div>

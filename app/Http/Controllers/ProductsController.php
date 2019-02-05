@@ -285,6 +285,13 @@ class ProductsController extends Controller {
 			return view('admin.orders.order_details', compact('orderDetails', 'userDetails'));
 		}
 
+		// Order Invoice
+		public function viewOrderInvoice($order_id) {
+			$orderDetails = Order::with('orders')->where('id', $order_id)->first();
+			$userDetails = User::where('id', $orderDetails->user_id)->first();
+			return view('admin.orders.order_invoice', compact('orderDetails', 'userDetails'));
+		}
+
 		// update order status
 		public function updateOrderStatus() {
 			if (request()->isMethod('post')) {

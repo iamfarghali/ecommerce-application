@@ -142,6 +142,8 @@
 				Route::get('/admin/view-orders', 'ProductsController@viewOrders');
 				// order details
 				Route::get('/admin/view-order/{id}', 'ProductsController@viewOrderDetails');
+				// order invoice
+				Route::get('/admin/view-order-invoice/{id}', 'ProductsController@viewOrderInvoice');
 				// update order status
 				Route::post('/admin/update-order-status', 'ProductsController@updateOrderStatus');
 

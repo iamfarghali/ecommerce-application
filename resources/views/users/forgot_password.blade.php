@@ -6,18 +6,12 @@
 				<div class="col-sm-4 col-sm-offset-1">
 					<!--login form-->
 					<div class="login-form">
-						<h2>Login to your account</h2>
-						<form id="loginForm" action="{{url('/login-user')}}" method="post">
+						<h2>Forgot Password ?</h2>
+						<form id="forgotPasswordForm" action="{{url('/forgot-password')}}" method="post">
 							{{csrf_field()}}
-							<input name="email" id="l-email" type="email" placeholder="Email Address" />
-							<input name="password" id="l-password" type="password" placeholder="Password" />
-{{-- 							<span>
-								<input type="checkbox" class="checkbox">
-								Keep me signed in
-							</span> --}}
-							<button type="submit" class="btn btn-default">Login</button>
-						</form><br>
-						<a href="{{url('/forgot-password')}}"> Forgot Password ?</a>
+							<input name="email" id="l-email" type="email" placeholder="Email Address" required />
+							<button type="submit" class="btn btn-default">Submit</button>
+						</form>
 					</div>
 				</div>
 				<div class="col-sm-1">
